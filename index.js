@@ -54,6 +54,16 @@ app.post("/add-data", (req, res) => {
 })
 
 
+// GET all data (MongoDB: find())
+app.get("/get-data", (req, res) => {
+    const sql = "SELECT * FROM students";
+    db.query(sql, (err, result) => {
+        if (err) return res.send(err);
+        res.send(result);
+    });
+})
+
+
 // SERVER
 app.listen(port, () => {
     console.log(`The Server is Running on ${port} Port`);

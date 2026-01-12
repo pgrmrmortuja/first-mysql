@@ -1,45 +1,37 @@
-// Importing express
-const express = require("express");
 
-// Importing cors
-const cors = require("cors");
-
-// dotenv
-require("dotenv").config();
-
-//port
-const port = process.env.PORT;
-
-// Import mysql
-const mysql = require("mysql2");
+const express = require("express") // Importing express
+const cors = require("cors"); // Importing cors
+require("dotenv").config(); // dotenv
+const port = process.env.PORT; //port
+const mysql = require("mysql2"); // Import mysql
 
 // App init
 const app = express();
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 
-// Logger middleware (same as yours)
+// Logger middleware 
 const logger = (req, res, next) => {
-  console.log(`${req.method} ${req.url} - ${req.ip}`);
-  next();
+    console.log(`${req.method} ${req.url} - ${req.ip}`);
+    next();
 };
 app.use(logger);
 
-// ✅ MySQL connection
+// MySQL connection
 const db = mysql.createConnection({
-  host: "localhost",
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: "testDB"
+    host: "localhost",
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: "testDB"
 });
 
 // Connect MySQL
 db.connect((err) => {
-  if (err) {
-    console.log("MySQL connection failed");
-    return;
-  }
-  console.log("MySQL connected ✅");
+    if (err) {
+        console.log("MySQL connection failed");
+        return;
+    }
+    console.log("MySQL connected");
 });
 
 
@@ -47,11 +39,22 @@ db.connect((err) => {
 
 // ROOT
 app.get("/", (req, res) => {
-  res.send("The Server is Working (MySQL)");
+    res.send("The MySQL Server is Working.");
 });
 
 
+// POST data (MongoDB: insertOne)
+app.post("/add-data", (req, res) => {
+    const data = req.body;
+    const sql = "INSERT INTO students SET ?";
+    db.query(sql, data, (err, result) => {
+        if (err) return res.send(err);
+        res.send(result);
+    });
+})
+
+
 // SERVER
-app.listen(5000, () => {
-  console.log(`The Server is Running on ${port} Port`);
+app.listen(port, () => {
+    console.log(`The Server is Running on ${port} Port`);
 });

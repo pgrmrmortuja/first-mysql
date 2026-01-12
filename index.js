@@ -65,13 +65,25 @@ app.get("/get-data", (req, res) => {
 
 
 // GET single data (MongoDB: findOne)
-app.get("/get-single-data/:id", (req, res) =>{
+app.get("/get-single-data/:id", (req, res) => {
     const id = req.params.id;
     const sql = "SELECT * FROM students WHERE id = ?";
-    db.query(sql, [id], (err, result) =>{
+    db.query(sql, [id], (err, result) => {
         if (err) return res.send(err);
         res.send(result[0]);
     })
+})
+
+
+// PATCH update (MongoDB: updateOne)
+app.patch("/patch-update/:id", (req, res) => {
+    const data = req.body;
+    const id = req.params.id;
+    const sql = "UPDATE students SET ? WHERE id = ?";
+    db.query(sql, [data, id], (err, result) => {
+        if (err) return res.send(err);
+        res.send(result);
+    });
 })
 
 

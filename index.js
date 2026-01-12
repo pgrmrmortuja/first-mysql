@@ -64,6 +64,17 @@ app.get("/get-data", (req, res) => {
 })
 
 
+// GET single data (MongoDB: findOne)
+app.get("/get-single-data/:id", (req, res) =>{
+    const id = req.params.id;
+    const sql = "SELECT * FROM students WHERE id = ?";
+    db.query(sql, [id], (err, result) =>{
+        if (err) return res.send(err);
+        res.send(result[0]);
+    })
+})
+
+
 // SERVER
 app.listen(port, () => {
     console.log(`The Server is Running on ${port} Port`);

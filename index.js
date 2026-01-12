@@ -87,6 +87,16 @@ app.patch("/patch-update/:id", (req, res) => {
 })
 
 
+// DELETE (MongoDB: deleteOne)
+app.delete("/delete-data/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "DELETE FROM students WHERE id = ?";
+    db.query(sql, [id], (err, result) => {
+        if (err) return res.send(err);
+        res.send(result);
+    })
+})
+
 // SERVER
 app.listen(port, () => {
     console.log(`The Server is Running on ${port} Port`);

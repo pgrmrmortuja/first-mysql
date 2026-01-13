@@ -1,4 +1,3 @@
-
 const express = require("express") // Importing express
 const cors = require("cors"); // Importing cors
 require("dotenv").config(); // dotenv
@@ -71,7 +70,30 @@ app.get("/get-single-data/:id", (req, res) => {
     db.query(sql, [id], (err, result) => {
         if (err) return res.send(err);
         res.send(result[0]);
-    })
+    });
+})
+
+
+// SEARCH (MongoDB regex → SQL LIKE)
+app.get("/get-search-data", (req, res) => {
+    const { search } = req.query;
+    let sql = "SELECT * FROM students";
+    let value = [];
+
+    //     if (search) {
+    //         sql += " WHERE title LIKE ?";
+    //         value.push(`%${search}%`);
+    //     }
+
+    if (search) {
+        sql += " WHERE name LIKE ? OR id LIKE ?";
+        value.push(`%${search}%`, `%${search}%`);
+    }
+
+    db.query(sql, value, (err, result) => {
+        if (err) return res.send(err);
+        res.send(result);
+    });
 })
 
 
@@ -94,7 +116,7 @@ app.delete("/delete-data/:id", (req, res) => {
     db.query(sql, [id], (err, result) => {
         if (err) return res.send(err);
         res.send(result);
-    })
+    });
 })
 
 // SERVER
